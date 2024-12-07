@@ -49,4 +49,4 @@ services:
 networks:
   arandu-network:
     name: arandu-network
-    driver: bridge
+    external: true
