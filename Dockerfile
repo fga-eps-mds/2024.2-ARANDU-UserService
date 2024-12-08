@@ -1,7 +1,4 @@
-FROM node:22-alpine AS base
-
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:22 AS base
 
 WORKDIR /app
 
@@ -10,10 +7,11 @@ RUN \
   if [ -f package-lock.json ]; then npm ci; \
   fi
 
+RUN npm install nodemon --save-dev
 
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+RUN npm install
 COPY . .
 
 COPY .env .env
@@ -24,17 +22,11 @@ WORKDIR /app
 
 ENV NODE_ENV=development
 
-RUN addgroup -g 1001 -S nodejs \
-  && adduser -S arandu -u 1001
-
-COPY --chown=arandu:nodejs --from=builder /app/dist ./dist
-COPY --chown=arandu:nodejs --from=builder /app/node_modules ./node_modules
-COPY --chown=arandu:nodejs --from=builder /app/.env ./.env
-
-USER arandu
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/ ./
 
 EXPOSE 3000
 
 ENV PORT=3000
 
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:dev"]
