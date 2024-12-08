@@ -1,7 +1,7 @@
-import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import * as mongoose from 'mongoose';
+import { UserRole } from '../../dtos/user-role.enum';
 import { User } from './user.interface';
-import { UserRole } from '../dtos/user-role.enum';
 
 export const UserSchema = new mongoose.Schema(
   {

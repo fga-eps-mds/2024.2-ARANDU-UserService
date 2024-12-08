@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from '../src/users/users.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { EmailService } from '../src/users/email.service';
-import { Model, Types } from 'mongoose';
-import { User } from '../src/users/interface/user.interface';
-import { UserRole } from '../src/users/dtos/user-role.enum';
-import { UpdateRoleDto } from '../src/users/dtos/update-role.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Model, Types } from 'mongoose';
+import { UpdateRoleDto } from '../src/dtos/update-role.dto';
+import { UserRole } from '../src/dtos/user-role.enum';
+import { EmailService } from '../src/users/email.service';
+import { User } from '../src/users/interface/user.interface';
+import { UsersService } from '../src/users/users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

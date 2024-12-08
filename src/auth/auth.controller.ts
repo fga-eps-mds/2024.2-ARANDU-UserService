@@ -1,24 +1,24 @@
 import {
-  Controller,
-  Post,
   Body,
-  UnauthorizedException,
+  Controller,
   Get,
-  UseGuards,
+  Logger,
+  Post,
+  Put,
   Req,
   Res,
-  Logger,
-  Put,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto } from 'src/users/dtos/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Response, Request } from 'express';
-import { RefreshTokenDto } from 'src/users/dtos/refresh-tokens.dto';
-import { ChangePasswordDto } from 'src/users/dtos/change-password.dto';
+import { Request, Response } from 'express';
+import { ChangePasswordDto } from 'src/dtos/change-password.dto';
+import { ForgotPasswordDto } from 'src/dtos/forgot-password.dto';
+import { LoginDto } from 'src/dtos/login.dto';
+import { RefreshTokenDto } from 'src/dtos/refresh-tokens.dto';
+import { ResetPasswordDto } from 'src/dtos/reset-password.dto';
+import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/auth.guard';
-import { ForgotPasswordDto } from 'src/users/dtos/forgot-password.dto';
-import { ResetPasswordDto } from 'src/users/dtos/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
