@@ -4,9 +4,9 @@
 .dockerignore
 
 # Build dependencies
-dist.do
-node_modules
-node_module 
+# dist.do
+# node_modules
+# node_module 
 
 # Misc
 .eslintrc.js
