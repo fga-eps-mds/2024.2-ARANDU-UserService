@@ -8,6 +8,10 @@
 
 Arandu é uma plataforma de aprendizado, 100% feita por estudantes da UnB, projetada para tornar o estudo de várias disciplinas escolares uma experiência envolvente e eficaz. Inspirado nos modelos de sucesso do Duolingo e Brilliant, o Arandu oferece uma abordagem inovadora para o aprendizado de matérias escolares, tornando-o acessível, divertido e altamente personalizado.
 
+## Quality Control
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2024.2-ARANDU-UserService&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2024.2-ARANDU-UserService)
+
 ## Requisitos
 
 - Node.js 22
