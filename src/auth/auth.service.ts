@@ -1,23 +1,23 @@
 import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
+    Injectable,
+    Logger,
+    NotFoundException,
+    UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
-import { RefreshToken } from 'src/users/interface/refresh-token.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/users/interface/user.interface';
-import { nanoid } from 'nanoid';
-import { EmailService } from 'src/users/email.service';
-import { ResetToken } from 'src/users/interface/reset-token.schema';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { ResetPasswordDto } from 'src/users/dtos/reset-password.dto';
+import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcryptjs';
+import { Response } from 'express';
+import { Model } from 'mongoose';
+import { nanoid } from 'nanoid';
+import { ResetPasswordDto } from 'src/dtos/reset-password.dto';
+import { EmailService } from 'src/users/email.service';
+import { RefreshToken } from 'src/users/interface/refresh-token.schema';
+import { ResetToken } from 'src/users/interface/reset-token.schema';
+import { User } from 'src/users/interface/user.interface';
+import { v4 as uuidv4 } from 'uuid';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

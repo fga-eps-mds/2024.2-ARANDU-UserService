@@ -1,17 +1,17 @@
-import { Model, Types } from 'mongoose';
-import { EmailService } from './email.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { CreateUserDtoFederated } from './dtos/create-user-federated.dto';
-import { User } from './interface/user.interface';
-import { InjectModel } from '@nestjs/mongoose';
 import {
-  Injectable,
-  NotFoundException,
-  ConflictException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { MongoError } from 'mongodb';
-import { UserRole } from './dtos/user-role.enum';
-import { UpdateRoleDto } from './dtos/update-role.dto';
+import { Model, Types } from 'mongoose';
+import { CreateUserDtoFederated } from '../dtos/create-user-federated.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateRoleDto } from '../dtos/update-role.dto';
+import { UserRole } from '../dtos/user-role.enum';
+import { EmailService } from './email.service';
+import { User } from './interface/user.interface';
 
 @Injectable()
 export class UsersService {

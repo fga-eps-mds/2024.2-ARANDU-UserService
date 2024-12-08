@@ -1,12 +1,12 @@
+import { NotFoundException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AuthService } from 'src/auth/auth.service';
+import { CreateUserDto } from 'src/dtos/create-user.dto';
+import { UpdateRoleDto } from 'src/dtos/update-role.dto';
+import { UserRole } from 'src/dtos/user-role.enum';
 import { UsersController } from 'src/users/users.controller';
 import { UsersService } from 'src/users/users.service';
-import { NotFoundException } from '@nestjs/common';
-import { UserRole } from 'src/users/dtos/user-role.enum';
-import { CreateUserDto } from 'src/users/dtos/create-user.dto';
-import { UpdateRoleDto } from 'src/users/dtos/update-role.dto';
-import { JwtService } from '@nestjs/jwt';
-import { AuthService } from 'src/auth/auth.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
