@@ -1,25 +1,25 @@
 import {
-  Controller,
-  Post,
-  Get,
   Body,
+  Controller,
+  Delete,
+  Get,
   NotFoundException,
   Param,
-  UsePipes,
-  ValidationPipe,
+  Patch,
+  Post,
   Query,
   UseGuards,
-  Patch,
-  Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UserRole } from './dtos/user-role.enum';
+import { Types } from 'mongoose';
+import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { UpdateRoleDto } from './dtos/update-role.dto';
-import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
-import { Types } from 'mongoose';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateRoleDto } from '../dtos/update-role.dto';
+import { UserRole } from '../dtos/user-role.enum';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

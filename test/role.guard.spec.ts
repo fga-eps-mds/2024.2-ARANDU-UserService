@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { ExecutionContext } from '@nestjs/common';
-import { UserRole } from 'src/users/dtos/user-role.enum';
+import { Test, TestingModule } from '@nestjs/testing';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { UserRole } from 'src/dtos/user-role.enum';
 
 describe('RolesGuard', () => {
   let rolesGuard: RolesGuard;

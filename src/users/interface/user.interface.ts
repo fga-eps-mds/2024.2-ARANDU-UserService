@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import { UserRole } from '../dtos/user-role.enum';
+import { UserRole } from '../../dtos/user-role.enum';
 
 export interface User extends Document {
   name: string;
