@@ -1,7 +1,7 @@
 import {
-    ConflictException,
-    Injectable,
-    NotFoundException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { MongoError } from 'mongodb';
@@ -9,6 +9,7 @@ import { Model, Types } from 'mongoose';
 import { CreateUserDtoFederated } from '../dtos/create-user-federated.dto';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateRoleDto } from '../dtos/update-role.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserRole } from '../dtos/user-role.enum';
 import { EmailService } from './email.service';
 import { User } from './interface/user.interface';
@@ -41,6 +42,37 @@ export class UsersService {
         );
       }
       throw error;
+    }
+  }
+
+  async updateUser ( userId: string, updateUserDto: UpdateUserDto ): Promise<User> {
+    await this.getUserById(userId);
+
+    if ( updateUserDto.email ) updateUserDto.isVerified = false;
+
+    var updateAttr = Object.fromEntries(
+        Object.entries(updateUserDto).filter(([key, value]) => value !== null)
+    )
+
+    try {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        userId,
+        { $set: updateAttr },
+        {
+          upsert: false,
+          new: true
+        }
+      )
+
+      if ( updateAttr['isVerified'] === false )  await this.emailService.sendVerificationEmail(updateAttr['email']);
+
+      return updatedUser;
+
+    } catch ( error ) {
+      if ( error instanceof MongoError ) {
+        throw new NotFoundException(`User with ID ${userId} not found!`)
+      }
+      throw error
     }
   }
 
