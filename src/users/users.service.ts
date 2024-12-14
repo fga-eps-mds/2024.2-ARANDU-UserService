@@ -51,7 +51,7 @@ export class UsersService {
     if ( updateUserDto.email ) updateUserDto.isVerified = false;
 
     var updateAttr = Object.fromEntries(
-        Object.entries(updateUserDto).filter(([key, value]) => value !== null)
+        Object.entries(updateUserDto).filter(([value]) => value !== null)
     )
 
     try {
