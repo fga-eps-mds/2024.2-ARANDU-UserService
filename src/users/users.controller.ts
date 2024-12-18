@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -18,6 +19,7 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateRoleDto } from '../dtos/update-role.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserRole } from '../dtos/user-role.enum';
 import { UsersService } from './users.service';
 
@@ -34,6 +36,27 @@ export class UsersController {
         message: 'User created successfully. Please verify your email.',
       };
     } catch (error) {
+      throw error;
+    }
+  }
+
+  @Patch('')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationPipe)
+  async updateUser(
+    @Req() req,
+    @Body() body: UpdateUserDto
+  ) {
+    try {
+      const user = await this.usersService.updateUser(req.userId, body)
+
+      return {
+        message: `User ${user.username} updated successfully!`
+      }
+    } catch ( error ) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(`User with ID ${req.userId} not found`);
+      }
       throw error;
     }
   }

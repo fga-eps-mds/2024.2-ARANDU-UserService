@@ -1,6 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MongoError } from 'mongodb';
 import { Model, Types } from 'mongoose';
 import { UpdateRoleDto } from '../src/dtos/update-role.dto';
 import { UserRole } from '../src/dtos/user-role.enum';
@@ -17,6 +18,20 @@ describe('UsersService', () => {
     name: 'Mock Name',
     email: 'mock@example.com',
     username: 'mockUsername',
+    password: 'mockPassword',
+    role: UserRole.ALUNO,
+    verificationToken: 'mockToken',
+    isVerified: false,
+    subscribedJourneys: [new Types.ObjectId(), new Types.ObjectId()],
+    completedTrails: [new Types.ObjectId(), new Types.ObjectId()],
+    save: jest.fn().mockResolvedValue(this),
+  };
+
+  const mockUpdatedUser = {
+    _id: 'mockId',
+    name: 'Updated Mock Name',
+    email: 'updatedmock@example.com',
+    username: 'updatedMockUsername',
     password: 'mockPassword',
     role: UserRole.ALUNO,
     verificationToken: 'mockToken',
@@ -53,6 +68,7 @@ describe('UsersService', () => {
     findById: jest.fn().mockReturnValue({
       exec: jest.fn().mockResolvedValue(mockUser),
     }),
+    findByIdAndUpdate: jest.fn().mockReturnValue(mockUpdatedUser),
     find: jest.fn().mockReturnValue({
       exec: jest.fn().mockResolvedValue(mockUserList),
     }),
@@ -87,6 +103,56 @@ describe('UsersService', () => {
     const result = await service.getUsers();
     expect(result).toEqual(mockUserList);
   });
+
+  it('should update an user', async () => {
+    const updateUserDto = {
+      name: 'Updated Mock Name',
+      email: 'updatedmock@example.com',
+      username: 'updatedMockUsername'
+    }
+
+    const result = await service.updateUser('mockId', updateUserDto);
+
+    expect(result).toEqual(mockUpdatedUser);
+  })
+
+  it('should return an error while trying to find an user to update', async () => {
+    const updateUserDto = {
+      name: 'Updated Mock Name',
+      email: 'updatedmock@example.com',
+      username: 'updatedMockUsername'
+    }
+
+    jest.spyOn(model, 'findById').mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValue(null),
+    } as any);
+
+    await expect(service.updateUser('inexistentId', updateUserDto)).rejects.toBeInstanceOf(NotFoundException)
+  })
+
+  it('should return an error while trying to update an user', async () => {
+    const updateUserDto = {
+      name: 'Updated Mock Name',
+      email: 'updatedmock@example.com',
+      username: 'updatedMockUsername'
+    }
+
+    jest.spyOn(model, 'findByIdAndUpdate').mockRejectedValueOnce(new MongoError(``));
+
+    await expect(service.updateUser('mockId', updateUserDto)).rejects.toBeInstanceOf(NotFoundException)
+  })
+
+  it('should return a not found error while trying to update an user', async () => {
+    const updateUserDto = {
+      name: 'Updated Mock Name',
+      email: 'updatedmock@example.com',
+      username: 'updatedMockUsername'
+    }
+
+    jest.spyOn(model, 'findByIdAndUpdate').mockRejectedValueOnce(new NotFoundException());
+
+    await expect(service.updateUser('mockId', updateUserDto)).rejects.toBeInstanceOf(NotFoundException)
+  })
 
   it('should verify a user', async () => {
     const result = await service.verifyUser('mockToken');

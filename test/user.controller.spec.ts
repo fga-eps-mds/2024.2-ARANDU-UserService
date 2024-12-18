@@ -7,6 +7,7 @@ import { UpdateRoleDto } from 'src/dtos/update-role.dto';
 import { UserRole } from 'src/dtos/user-role.enum';
 import { UsersController } from 'src/users/users.controller';
 import { UsersService } from 'src/users/users.service';
+import { UpdateUserDto } from '../src/dtos/update-user.dto';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -18,9 +19,18 @@ describe('UsersController', () => {
     role: UserRole.ALUNO,
   };
 
+  const mockUpdatedUser = {
+    _id: 'mockUserId',
+    name: 'Mock User',
+    username: 'mockusername',
+    email: 'mock@example.com',
+    role: UserRole.ALUNO,
+  }
+
   const mockUserService = {
     createUser: jest.fn().mockResolvedValue(mockUser),
     verifyUser: jest.fn().mockResolvedValue(mockUser),
+    updateUser: jest.fn().mockResolvedValue(mockUpdatedUser),
     getSubscribedJourneys: jest.fn().mockResolvedValue([]),
     getUsers: jest.fn().mockResolvedValue([mockUser]),
     addPointToUser: jest.fn().mockResolvedValue(mockUser),
@@ -62,6 +72,36 @@ describe('UsersController', () => {
       message: 'User created successfully. Please verify your email.',
     });
   });
+
+  it('should update an user', async () => {
+    const userId = 'mockUserId';
+
+    const updateUserDto: UpdateUserDto = {
+      name: 'Mock User',
+      username: 'mockusername',
+      email: 'mock@example.com'
+    }
+
+    const req = { userId: userId } as any;
+
+    expect(await controller.updateUser(req, updateUserDto)).toEqual({
+      message: `User ${mockUpdatedUser.username} updated successfully!`
+    })
+  })
+
+  it('should return an error while trying to update user', async () => {
+    const updateUserDto: UpdateUserDto = {
+      name: 'Mock User',
+      username: 'mockusername',
+      email: 'mock@example.com'
+    }
+
+    const req = { userId: 'idInexistente' } as any;
+
+    mockUserService.updateUser.mockRejectedValueOnce(new NotFoundException("User with ID 'idInexistente' not found"));
+
+    await expect(controller.updateUser(req, updateUserDto)).rejects.toBeInstanceOf(NotFoundException)
+  })
 
   it('should verify a user', async () => {
     const token = 'validToken';
