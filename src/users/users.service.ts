@@ -22,13 +22,13 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, username, password, role } = createUserDto;
+    const { name, email, username, password } = createUserDto;
     const createdUser = new this.userModel({
       name,
       email,
       username,
       password,
-      role: role || UserRole.ALUNO,
+      role: UserRole.ALUNO,
     });
 
     try {
