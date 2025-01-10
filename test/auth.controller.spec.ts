@@ -1,10 +1,10 @@
+import { Logger, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request } from 'express';
 import { AuthController } from 'src/auth/auth.controller';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { Logger, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -58,7 +58,7 @@ describe('AuthController', () => {
       const result = {
         accessToken: 'token',
         refreshToken: 'refresh-token',
-        id: 1,
+        userId: 1,
         name: 'Test User',
         email: 'test@test.com',
       };
