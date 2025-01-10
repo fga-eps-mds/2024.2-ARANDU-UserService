@@ -1,16 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
-import { EmailService } from 'src/users/email.service';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcryptjs';
+import { Model } from 'mongoose';
+import { AuthService } from 'src/auth/auth.service';
+import { EmailService } from 'src/users/email.service';
 import { RefreshToken } from 'src/users/interface/refresh-token.schema';
 import { ResetToken } from 'src/users/interface/reset-token.schema';
 import { User } from 'src/users/interface/user.interface';
-import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
-import { AuthService } from 'src/auth/auth.service';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -90,7 +90,7 @@ describe('AuthService', () => {
 
       const result = await service.login(user);
       expect(result).toEqual({
-        id: 'user-id',
+        userId: 'user-id',
         name: 'Test User',
         email: 'test@example.com',
         accessToken: 'access-token',
@@ -127,7 +127,7 @@ describe('AuthService', () => {
       jest.spyOn(service, 'storeRefreshToken').mockResolvedValue(undefined);
 
       const result = await service.generateTokens({
-        id: 'user-id',
+        userId: 'user-id',
         name: 'Test User',
         email: 'test@example.com',
         role: 'user',
