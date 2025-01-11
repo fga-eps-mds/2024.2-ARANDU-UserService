@@ -27,7 +27,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: Profile,
     done: VerifyCallback,
   ) {
-    this.logger.log('GoogleStrategy - Profile:', profile);
+    //this.logger.log('GoogleStrategy - Profile:', profile);
     const { user, token } = await this.authService.loginFederated({
       email: profile.emails[0].value,
       name: profile.displayName,

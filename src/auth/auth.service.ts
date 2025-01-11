@@ -1,8 +1,8 @@
 import {
-    Injectable,
-    Logger,
-    NotFoundException,
-    UnauthorizedException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -50,13 +50,13 @@ export class AuthService {
 
   async login(user: any) {
     const tokens = await this.generateTokens({
-      id: user._id,
+      userId: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
     });
     return {
-      id: user._id,
+      userId: user._id,
       name: user.name,
       email: user.email,
       ...tokens,
@@ -75,7 +75,7 @@ export class AuthService {
       });
     }
     const token = await this.generateTokens({
-      id: user._id,
+      userId: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
@@ -84,21 +84,21 @@ export class AuthService {
     return { user, token };
   }
 
-  async generateTokens({ id, name, email, role }) {
+  async generateTokens({ userId, name, email, role }) {
     const payload = {
-      id: id,
+      userId: userId,
       name: name,
       email: email,
-      sub: id,
+      sub: userId,
       role: role,
     };
     const accessToken = this.jwtService.sign(
-      { id, ...payload },
+      { userId, ...payload },
       { expiresIn: '10h' },
     );
 
     const refreshToken = uuidv4();
-    await this.storeRefreshToken(refreshToken, id);
+    await this.storeRefreshToken(refreshToken, userId);
     return {
       accessToken,
       refreshToken,
@@ -142,7 +142,7 @@ export class AuthService {
     const user = await this.usersService.findById(token.userId.toString());
 
     return this.generateTokens({
-      id: user._id,
+      userId: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
@@ -165,7 +165,7 @@ export class AuthService {
   }
 
   redirectFederated(user: any, res: Response) {
-    this.logger.log('redirectFederated', user);
+    //this.logger.log('redirectFederated', user);
     const { accessToken, refreshToken } = user || {};
 
     if (accessToken) {
