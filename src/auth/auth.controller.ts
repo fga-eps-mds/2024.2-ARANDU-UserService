@@ -27,7 +27,6 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    this.logger.log('AuthController - Login Request:', loginDto);
 
     const user = await this.authService.validateUser(
       loginDto.email,
@@ -48,7 +47,7 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    this.logger.log('AuthController - Google Callback Request:', req.user);
+    //this.logger.log('AuthController - Google Callback Request:', req.user);
     this.authService.redirectFederated(req.user as any, res);
   }
 
@@ -61,10 +60,10 @@ export class AuthController {
   @Get('microsoft/callback')
   @UseGuards(AuthGuard('microsoft'))
   microsoftAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    this.logger.log(
-      'AuthController - Microsoft Callback Request:',
-      JSON.stringify(req.user),
-    );
+    //this.logger.log(
+    //'AuthController - Microsoft Callback Request:',
+    // JSON.stringify(req.user),
+    //);
     this.authService.redirectFederated(req.user as any, res);
   }
 

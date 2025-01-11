@@ -165,7 +165,7 @@ export class AuthService {
   }
 
   redirectFederated(user: any, res: Response) {
-    this.logger.log('redirectFederated', user);
+    //this.logger.log('redirectFederated', user);
     const { accessToken, refreshToken } = user || {};
 
     if (accessToken) {
