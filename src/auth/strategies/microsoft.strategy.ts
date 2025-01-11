@@ -28,7 +28,7 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'microsoft') {
     profile: Profile,
     done: VerifyCallback,
   ) {
-    this.logger.log('MicrosoftStrategy - Profile:', JSON.stringify(profile));
+    //this.logger.log('MicrosoftStrategy - Profile:', JSON.stringify(profile));
     const { user, token } = await this.authService.loginFederated({
       email: profile.emails[0].value,
       name: profile.displayName,
