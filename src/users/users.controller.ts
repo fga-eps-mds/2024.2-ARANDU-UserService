@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -84,13 +85,13 @@ export class UsersController {
     return await this.usersService.getUsers();
   }
 
-  @Patch(':id/add-point')
-  async addPointToUser(
+  @Put(':id/subjects/:subjectId/add')
+  async addSubjectToUser(
     @Param('id') id: string,
-    @Body() body: { pointId: string },
+    @Param('subjectId') subjectId: string,
   ) {
     try {
-      return await this.usersService.addPointToUser(id, body.pointId);
+      return await this.usersService.addSubjectToUser(id, subjectId);
     } catch (error) {
       throw error;
     }
