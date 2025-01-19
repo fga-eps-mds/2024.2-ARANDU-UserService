@@ -16,7 +16,7 @@ export const UserSchema = new mongoose.Schema(
       enum: Object.values(UserRole),
       default: UserRole.ALUNO,
     },
-    points: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Point' }],
+    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
     subscribedJourneys: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Journey' },
     ],
