@@ -33,7 +33,7 @@ describe('UsersController', () => {
     updateUser: jest.fn().mockResolvedValue(mockUpdatedUser),
     getSubscribedJourneys: jest.fn().mockResolvedValue([]),
     getUsers: jest.fn().mockResolvedValue([mockUser]),
-    addPointToUser: jest.fn().mockResolvedValue(mockUser),
+    addSubjectToUser: jest.fn().mockResolvedValue(mockUser),
     subscribeJourney: jest.fn().mockResolvedValue(mockUser),
     unsubscribeJourney: jest.fn().mockResolvedValue(mockUser),
     getUserById: jest.fn().mockResolvedValue(mockUser),
@@ -119,22 +119,22 @@ describe('UsersController', () => {
     await expect(controller.getUsers()).resolves.toEqual([mockUser]);
   });
 
-  it('should add a point to a user', async () => {
+  it('should add a subject to a user', async () => {
     const userId = 'mockUserId';
-    const pointId = 'mockPointId';
+    const subjectId = 'mockSubjectId';
     await expect(
-      controller.addPointToUser(userId, { pointId }),
+      controller.addSubjectToUser(userId, subjectId),
     ).resolves.toEqual(mockUser);
   });
 
-  it('should handle error when adding a point to a user', async () => {
+  it('should handle error when adding a subject to a user', async () => {
     const userId = 'mockUserId';
-    const pointId = 'mockPointId';
-    mockUserService.addPointToUser.mockRejectedValueOnce(
+    const subjectId = 'mockSubjectId';
+    mockUserService.addSubjectToUser.mockRejectedValueOnce(
       new NotFoundException('User not found'),
     );
     await expect(
-      controller.addPointToUser(userId, { pointId }),
+      controller.addSubjectToUser(userId, subjectId),
     ).rejects.toThrow(NotFoundException);
   });
 
