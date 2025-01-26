@@ -130,6 +130,7 @@ describe('AuthService', () => {
         userId: 'user-id',
         id: 'user-id',
         name: 'Test User',
+        username: 'username',
         email: 'test@example.com',
         role: 'user',
       });
