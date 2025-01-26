@@ -53,6 +53,7 @@ export class AuthService {
       userId: user._id,
       id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });
@@ -79,6 +80,7 @@ export class AuthService {
       userId: user._id,
       id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });
@@ -86,11 +88,12 @@ export class AuthService {
     return { user, token };
   }
 
-  async generateTokens({ userId, id, name, email, role }) {
+  async generateTokens({ userId, id, name, username, email, role }) {
     const payload = {
       userId: userId,
       id: id,
       name: name,
+      username: username,
       email: email,
       sub: userId,
       role: role,
@@ -148,6 +151,7 @@ export class AuthService {
       userId: user._id,
       id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });
