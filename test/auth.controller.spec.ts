@@ -58,7 +58,7 @@ describe('AuthController', () => {
       const result = {
         accessToken: 'token',
         refreshToken: 'refresh-token',
-        userId: 1,
+        id: 1,
         name: 'Test User',
         email: 'test@test.com',
       };

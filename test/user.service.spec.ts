@@ -226,6 +226,25 @@ describe('UsersService', () => {
     ).rejects.toThrow(NotFoundException);
   });
 
+  it('should add a subject to a user', async () => {
+    const subjectId = new Types.ObjectId();
+    const userWithSubject = { ...mockUser, subjects: [subjectId] };
+
+    jest.spyOn(model, 'findById').mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValue(mockUser),
+    } as any);
+    jest.spyOn(mockUser, 'save').mockResolvedValue(userWithSubject as any);
+
+    const result = await service.addSubjectToUser(
+      'mockId',
+      subjectId.toHexString(),
+    );
+
+    expect(result.subjects).toContain(subjectId);
+    expect(result.subjects.length).toBe(1);
+    expect(mockUser.save).toHaveBeenCalled();
+  });
+
   it('should add a journey to a user', async () => {
     const journeyId = new Types.ObjectId();
     const userWithJourney = { ...mockUser, journeys: [journeyId] };

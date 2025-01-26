@@ -51,12 +51,14 @@ export class AuthService {
   async login(user: any) {
     const tokens = await this.generateTokens({
       userId: user._id,
+      id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });
     return {
-      userId: user._id,
+      id: user._id,
       name: user.name,
       email: user.email,
       ...tokens,
@@ -76,7 +78,9 @@ export class AuthService {
     }
     const token = await this.generateTokens({
       userId: user._id,
+      id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });
@@ -84,10 +88,12 @@ export class AuthService {
     return { user, token };
   }
 
-  async generateTokens({ userId, name, email, role }) {
+  async generateTokens({ userId, id, name, username, email, role }) {
     const payload = {
       userId: userId,
+      id: id,
       name: name,
+      username: username,
       email: email,
       sub: userId,
       role: role,
@@ -143,7 +149,9 @@ export class AuthService {
 
     return this.generateTokens({
       userId: user._id,
+      id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
     });

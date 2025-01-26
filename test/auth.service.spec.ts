@@ -90,7 +90,7 @@ describe('AuthService', () => {
 
       const result = await service.login(user);
       expect(result).toEqual({
-        userId: 'user-id',
+        id: 'user-id',
         name: 'Test User',
         email: 'test@example.com',
         accessToken: 'access-token',
@@ -128,7 +128,9 @@ describe('AuthService', () => {
 
       const result = await service.generateTokens({
         userId: 'user-id',
+        id: 'user-id',
         name: 'Test User',
+        username: 'username',
         email: 'test@example.com',
         role: 'user',
       });
