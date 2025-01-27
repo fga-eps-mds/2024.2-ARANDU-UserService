@@ -208,6 +208,27 @@ export class UsersService {
     return user.save();
   }
 
+  async subscribeSubject ( userId: string, subjectId: string ): Promise<Partial<User>> {
+      const user = await this.userModel.findById(userId).exec();
+
+      if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+
+      if ( !user.subscribedSubjects ) user.subscribedSubjects = [new Types.ObjectId(subjectId)];
+      else if ( !user.subscribedSubjects.includes(new Types.ObjectId(subjectId)) )
+        user.subscribedSubjects.push(new Types.ObjectId(subjectId));
+      else throw new ConflictException(`User already subscribed at subject with ID ${subjectId}!`);
+
+      const savedUser = await user.save();
+
+      return {
+        id: savedUser.id,
+        email: savedUser.email,
+        name: savedUser.name,
+        username: savedUser.username,
+        subscribedSubjects: savedUser.subscribedSubjects
+      }
+  }
+
   async unsubscribeJourney(userId: string, journeyId: string): Promise<User> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
@@ -225,6 +246,29 @@ export class UsersService {
     return user.save();
   }
 
+  async unsubscribeSubject( userId: string, subjectId: string ): Promise<Partial<User>> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+
+    const objectId = new Types.ObjectId(subjectId);
+
+    if ( !user.subscribedSubjects || !user.subscribedSubjects.includes(objectId) )
+      throw new NotFoundException(`User not subscribed at subject with ID ${subjectId}`)
+    
+    user.subscribedSubjects = user.subscribedSubjects.filter( (id) => !id.equals(objectId))
+
+    const savedUser = await user.save();
+
+    return {
+      id: savedUser.id,
+      name: savedUser.name,
+      email: savedUser.email,
+      username: savedUser.username,
+      subscribedSubjects: savedUser.subscribedSubjects
+    }
+  }
+
   async getSubscribedJourneys(userId: string): Promise<Types.ObjectId[]> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
@@ -233,6 +277,14 @@ export class UsersService {
 
     return user.subscribedJourneys;
   }
+
+  async getSubscribedSubjects ( userId: string ): Promise<Types.ObjectId[]> {
+      const user = await this.userModel.findById(userId).exec();
+
+      if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+
+      return user.subscribedSubjects;
+  } 
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({ email }).exec();
