@@ -23,6 +23,7 @@ describe('UsersService', () => {
     verificationToken: 'mockToken',
     isVerified: false,
     subscribedJourneys: [new Types.ObjectId(), new Types.ObjectId()],
+    subscribedSubjects: [new Types.ObjectId(), new Types.ObjectId()],
     completedTrails: [new Types.ObjectId(), new Types.ObjectId()],
     save: jest.fn().mockResolvedValue(this),
   };
@@ -37,6 +38,7 @@ describe('UsersService', () => {
     verificationToken: 'mockToken',
     isVerified: false,
     subscribedJourneys: [new Types.ObjectId(), new Types.ObjectId()],
+    subscribedSubjects: [new Types.ObjectId(), new Types.ObjectId()],
     completedTrails: [new Types.ObjectId(), new Types.ObjectId()],
     save: jest.fn().mockResolvedValue(this),
   };
@@ -271,6 +273,45 @@ describe('UsersService', () => {
 
     await expect(
       service.addJourneyToUser('invalidId', 'mockJourneyId'),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it('should add a subject to user subscribedSubjects if not already subscribed', async () => {
+    const subjectId = new Types.ObjectId().toHexString();
+
+    jest.spyOn(model, 'findById').mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValue(mockUser),
+    } as any);
+
+    const result = await service.subscribeSubject('mockId', subjectId);
+
+    expect(result.subscribedSubjects).toContainEqual(
+      new Types.ObjectId(subjectId),
+    );
+    expect(result.subscribedSubjects.length).toBe(3);
+  });
+
+  it('should throw NotFoundException if user is not found when subscribing in a subject', async () => {
+    const subjectId = new Types.ObjectId().toHexString();
+
+    jest.spyOn(model, 'findById').mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValue(null),
+    } as any);
+
+    await expect(
+      service.subscribeSubject('invalidId', subjectId),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it('should throw NotFoundException if user is not found when unsubscribing from a subject', async () => {
+    const subjectId = new Types.ObjectId().toHexString();
+
+    jest.spyOn(model, 'findById').mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValue(null),
+    } as any);
+
+    await expect(
+      service.unsubscribeSubject('invalidId', subjectId),
     ).rejects.toThrow(NotFoundException);
   });
 
