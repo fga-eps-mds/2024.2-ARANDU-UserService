@@ -80,6 +80,11 @@ export class UsersController {
     return await this.usersService.getSubscribedJourneys(userId);
   }
 
+  @Get(':userId/subscribedSubjects')
+  async getSubscribedSubjects ( @Param('userId') userId: string ): Promise<Types.ObjectId[]> {
+     return await this.usersService.getSubscribedSubjects(userId);
+  }
+
   @Get()
   async getUsers() {
     return await this.usersService.getUsers();
@@ -96,6 +101,25 @@ export class UsersController {
       throw error;
     }
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':userId/subjects/subscribe/:subjectId')
+  async subscribeSubject(
+    @Param('userId') userId: string,
+    @Param('subjectId') subjectId: string,
+  ) {
+    return await this.usersService.subscribeSubject(userId, subjectId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':userId/subjects/unsubscribe/:subjectId')
+  async unsubscribeSubject(
+    @Param('userId') userId: string,
+    @Param('subjectId') subjectId: string,
+  ) {
+    return this.usersService.unsubscribeSubject(userId, subjectId);
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @Post(':userId/subscribe/:journeyId')

@@ -12,5 +12,6 @@ export interface User extends Document {
   subjects?: mongoose.Types.ObjectId[];
   journeys?: mongoose.Types.ObjectId[];
   subscribedJourneys?: mongoose.Types.ObjectId[];
+  subscribedSubjects?: mongoose.Types.ObjectId[];
   completedTrails?: mongoose.Types.ObjectId[];
 }
