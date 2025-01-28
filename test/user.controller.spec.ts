@@ -27,15 +27,34 @@ describe('UsersController', () => {
     role: UserRole.ALUNO,
   }
 
+  const mockSubscribedSubject = {
+    _id: 'mocked-id',
+    email: 'mocked-email',
+    name: 'mocked-name',
+    username: 'mocked-username',
+    subscribedSubjects: ['mocked-subject']
+  }
+
+  const mockUnsubscribedSubject = {
+    id: 'mocked-id',
+    email: 'mocked-email',
+    name: 'mocked-name',
+    username: 'mocked-username',
+    subscribedSubjects: []
+  }
+
   const mockUserService = {
     createUser: jest.fn().mockResolvedValue(mockUser),
     verifyUser: jest.fn().mockResolvedValue(mockUser),
     updateUser: jest.fn().mockResolvedValue(mockUpdatedUser),
     getSubscribedJourneys: jest.fn().mockResolvedValue([]),
+    getSubscribedSubjects: jest.fn().mockResolvedValue([]),
     getUsers: jest.fn().mockResolvedValue([mockUser]),
     addSubjectToUser: jest.fn().mockResolvedValue(mockUser),
     subscribeJourney: jest.fn().mockResolvedValue(mockUser),
     unsubscribeJourney: jest.fn().mockResolvedValue(mockUser),
+    subscribeSubject: jest.fn().mockResolvedValue(mockSubscribedSubject),
+    unsubscribeSubject: jest.fn().mockResolvedValue(mockUnsubscribedSubject),
     getUserById: jest.fn().mockResolvedValue(mockUser),
     deleteUserById: jest.fn().mockResolvedValue(undefined),
     updateUserRole: jest.fn().mockResolvedValue(mockUser),
@@ -89,6 +108,38 @@ describe('UsersController', () => {
     })
   })
 
+  it('should subscribe to subject', async () => {
+    const userId = 'mocked-id';
+    const subjectId = 'mocked-subject';
+
+    expect(await controller.subscribeSubject(userId, subjectId)).toBe(mockSubscribedSubject);
+  })
+
+  it('should return error when trying to subscribe to subject', async () => {
+    const userId = 'false-id';
+    const subjectId = 'mocked-subject';
+
+    mockUserService.subscribeSubject.mockRejectedValueOnce(new NotFoundException(`Couldn't find user with ID ${userId}`));
+
+    await expect(controller.subscribeSubject(userId, subjectId)).rejects.toBeInstanceOf(NotFoundException);
+  })
+
+  it('should unsubscribe to subject', async () => {
+    const userId = 'mocked-id';
+    const subjectId = 'mocked-subject';
+
+    expect(await controller.unsubscribeSubject(userId, subjectId)).toBe(mockUnsubscribedSubject);
+  })
+
+  it('should return error when trying to unsubscribe to subject', async () => {
+    const userId = 'false-id';
+    const subjectId = 'mocked-subject';
+
+    mockUserService.unsubscribeSubject.mockRejectedValueOnce(new NotFoundException(`Couldn't find user with ID ${userId}`));
+
+    await expect(controller.unsubscribeSubject(userId, subjectId)).rejects.toBeInstanceOf(NotFoundException);
+  })
+
   it('should return an error while trying to update user', async () => {
     const updateUserDto: UpdateUserDto = {
       name: 'Mock User',
@@ -113,6 +164,19 @@ describe('UsersController', () => {
   it('should get subscribed journeys', async () => {
     const userId = 'mockUserId';
     await expect(controller.getSubscribedJourneys(userId)).resolves.toEqual([]);
+  });
+
+  it('should return error when trying to return subscribed subjects', async () => {
+    const userId = 'false-id';
+
+    mockUserService.getSubscribedSubjects.mockRejectedValueOnce(new NotFoundException(`User with ID ${userId} not found`));
+
+    await expect(controller.getSubscribedSubjects(userId)).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('should get subscribed subjects', async () => {
+    const userId = 'mockUserId';
+    await expect(controller.getSubscribedSubjects(userId)).resolves.toEqual([]);
   });
 
   it('should get all users', async () => {

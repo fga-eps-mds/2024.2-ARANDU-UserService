@@ -20,6 +20,9 @@ export const UserSchema = new mongoose.Schema(
     subscribedJourneys: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Journey' },
     ],
+    subscribedSubjects: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
+    ],
     completedTrails: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Trail' }],
   },
   { timestamps: true, collection: 'users' },
