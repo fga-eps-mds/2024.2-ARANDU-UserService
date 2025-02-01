@@ -26,7 +26,7 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   @UsePipes(ValidationPipe)
@@ -54,7 +54,7 @@ export class UsersController {
       return {
         message: `User ${user.username} updated successfully!`
       }
-    } catch ( error ) {
+    } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(`User with ID ${req.userId} not found`);
       }
@@ -81,8 +81,8 @@ export class UsersController {
   }
 
   @Get(':userId/subscribedSubjects')
-  async getSubscribedSubjects ( @Param('userId') userId: string ): Promise<Types.ObjectId[]> {
-     return await this.usersService.getSubscribedSubjects(userId);
+  async getSubscribedSubjects(@Param('userId') userId: string): Promise<Types.ObjectId[]> {
+    return await this.usersService.getSubscribedSubjects(userId);
   }
 
   @Get()
@@ -97,6 +97,18 @@ export class UsersController {
   ) {
     try {
       return await this.usersService.addSubjectToUser(id, subjectId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put(':id/knowledges/:knowledgeId/add')
+  async addKnowledgeToUser(
+    @Param('id') id: string,
+    @Param('knowledgeId') knowledgeId: string,
+  ) {
+    try {
+      return await this.usersService.addKnowledgeToUser(id, knowledgeId);
     } catch (error) {
       throw error;
     }
