@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	docker-compose build --no-cache
+	docker-compose build
 
 .PHONY: start
 start:
@@ -8,7 +8,7 @@ start:
 
 .PHONY: run
 run:
-	docker-compose build --no-cache && docker-compose up
+	docker-compose build && docker-compose up
 
 .PHONY: stop
 stop:

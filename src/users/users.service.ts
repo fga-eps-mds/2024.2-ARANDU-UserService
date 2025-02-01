@@ -19,7 +19,7 @@ export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { name, email, username, password } = createUserDto;
@@ -45,13 +45,13 @@ export class UsersService {
     }
   }
 
-  async updateUser ( userId: string, updateUserDto: UpdateUserDto ): Promise<User> {
+  async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.getUserById(userId);
 
-    if ( updateUserDto.email ) updateUserDto.isVerified = false;
+    if (updateUserDto.email) updateUserDto.isVerified = false;
 
     var updateAttr = Object.fromEntries(
-        Object.entries(updateUserDto).filter(([value]) => value !== null)
+      Object.entries(updateUserDto).filter(([value]) => value !== null)
     )
 
     try {
@@ -64,12 +64,12 @@ export class UsersService {
         }
       )
 
-      if ( updateAttr['isVerified'] === false )  await this.emailService.sendVerificationEmail(updateAttr['email']);
+      if (updateAttr['isVerified'] === false) await this.emailService.sendVerificationEmail(updateAttr['email']);
 
       return updatedUser;
 
-    } catch ( error ) {
-      if ( error instanceof MongoError ) {
+    } catch (error) {
+      if (error instanceof MongoError) {
         throw new NotFoundException(`User with ID ${userId} not found!`)
       }
       throw error
@@ -112,6 +112,20 @@ export class UsersService {
     return user;
   }
 
+  async addKnowledgeToUser(userId: string, knowledgeId: string): Promise<User> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
+
+    const objectId = new Types.ObjectId(knowledgeId);
+
+    user.knowledges = (user.knowledges ? user.knowledges : [])
+
+    if (!user.knowledges.includes(objectId)) user.knowledges.push(objectId);
+
+    return user.save();
+  }
+
   async addSubjectToUser(userId: string, subjectId: string): Promise<User> {
     const user = await this.userModel.findById(userId).exec();
 
@@ -119,7 +133,7 @@ export class UsersService {
 
     const objectId = new Types.ObjectId(subjectId);
 
-    user.subjects = ( user.subjects ? user.subjects : [] )
+    user.subjects = (user.subjects ? user.subjects : [])
 
     if (!user.subjects.includes(objectId)) user.subjects.push(objectId);
 
@@ -208,25 +222,25 @@ export class UsersService {
     return user.save();
   }
 
-  async subscribeSubject ( userId: string, subjectId: string ): Promise<Partial<User>> {
-      const user = await this.userModel.findById(userId).exec();
+  async subscribeSubject(userId: string, subjectId: string): Promise<Partial<User>> {
+    const user = await this.userModel.findById(userId).exec();
 
-      if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+    if (!user) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
 
-      if ( !user.subscribedSubjects ) user.subscribedSubjects = [new Types.ObjectId(subjectId)];
-      else if ( !user.subscribedSubjects.includes(new Types.ObjectId(subjectId)) )
-        user.subscribedSubjects.push(new Types.ObjectId(subjectId));
-      else throw new ConflictException(`User already subscribed at subject with ID ${subjectId}!`);
+    if (!user.subscribedSubjects) user.subscribedSubjects = [new Types.ObjectId(subjectId)];
+    else if (!user.subscribedSubjects.includes(new Types.ObjectId(subjectId)))
+      user.subscribedSubjects.push(new Types.ObjectId(subjectId));
+    else throw new ConflictException(`User already subscribed at subject with ID ${subjectId}!`);
 
-      const savedUser = await user.save();
+    const savedUser = await user.save();
 
-      return {
-        id: savedUser.id,
-        email: savedUser.email,
-        name: savedUser.name,
-        username: savedUser.username,
-        subscribedSubjects: savedUser.subscribedSubjects
-      }
+    return {
+      id: savedUser.id,
+      email: savedUser.email,
+      name: savedUser.name,
+      username: savedUser.username,
+      subscribedSubjects: savedUser.subscribedSubjects
+    }
   }
 
   async unsubscribeJourney(userId: string, journeyId: string): Promise<User> {
@@ -246,17 +260,17 @@ export class UsersService {
     return user.save();
   }
 
-  async unsubscribeSubject( userId: string, subjectId: string ): Promise<Partial<User>> {
+  async unsubscribeSubject(userId: string, subjectId: string): Promise<Partial<User>> {
     const user = await this.userModel.findById(userId).exec();
 
-    if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+    if (!user) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
 
     const objectId = new Types.ObjectId(subjectId);
 
-    if ( !user.subscribedSubjects || !user.subscribedSubjects.includes(objectId) )
+    if (!user.subscribedSubjects || !user.subscribedSubjects.includes(objectId))
       throw new NotFoundException(`User not subscribed at subject with ID ${subjectId}`)
-    
-    user.subscribedSubjects = user.subscribedSubjects.filter( (id) => !id.equals(objectId))
+
+    user.subscribedSubjects = user.subscribedSubjects.filter((id) => !id.equals(objectId))
 
     const savedUser = await user.save();
 
@@ -278,13 +292,13 @@ export class UsersService {
     return user.subscribedJourneys;
   }
 
-  async getSubscribedSubjects ( userId: string ): Promise<Types.ObjectId[]> {
-      const user = await this.userModel.findById(userId).exec();
+  async getSubscribedSubjects(userId: string): Promise<Types.ObjectId[]> {
+    const user = await this.userModel.findById(userId).exec();
 
-      if ( !user ) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
+    if (!user) throw new NotFoundException(`Couldn't find user with ID ${userId}`);
 
-      return user.subscribedSubjects;
-  } 
+    return user.subscribedSubjects;
+  }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({ email }).exec();
