@@ -17,8 +17,12 @@ export const UserSchema = new mongoose.Schema(
       default: UserRole.ALUNO,
     },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
+    knowledges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Knowledge' }],
     subscribedJourneys: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Journey' },
+    ],
+    subscribedSubjects: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
     ],
     completedTrails: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Trail' }],
   },
